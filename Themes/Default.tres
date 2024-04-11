@@ -1,0 +1,21 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://o77roctso2gb"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_piyw5"]
+bg_color = Color(0.176471, 0.176471, 0.176471, 1)
+
+[resource]
+resource_name = "Default_Theme"
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_piyw5")
+RichTextLabel/constants/line_separation = 0
+RichTextLabel/font_sizes/bold_font_size = 20
+RichTextLabel/font_sizes/bold_italics_font_size = 20
+RichTextLabel/font_sizes/italics_font_size = 20
+RichTextLabel/font_sizes/mono_font_size = 20
+RichTextLabel/font_sizes/normal_font_size = 20
+RichTextLabel/fonts/bold_font = null
+RichTextLabel/fonts/bold_italics_font = null
+RichTextLabel/fonts/italics_font = null
+RichTextLabel/fonts/mono_font = null
+RichTextLabel/fonts/normal_font = null
+RichTextLabel/styles/focus = null
+RichTextLabel/styles/normal = null
