@@ -141,3 +141,4 @@ func gameOver():
 func _on_string_generator_string_generated():
 	await get_tree().create_timer(.1).timeout
 	gameSetup()
+	print("Testing Git")
