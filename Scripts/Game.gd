@@ -26,44 +26,18 @@ func gameSetup():
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed():
 		var key_typed = PackedByteArray([event.unicode]).get_string_from_ascii()
-		iString = iString + key_typed ## BIG TEST, NO CLUE IF THIS IS THE CORRECT SPOT TO PUT THIS. I THINK IT IS
+		iString = iString + key_typed
 		
 		if event.keycode == KEY_BACKSPACE: # If Backspace was pressed
-			if iString.length() != 0:
-				# Checks if the last "letter" in the currentWord array is an xtra input
-				# If it is, it will be removed
-				if gameArray[currentWord][gameArray[currentWord].size()-2][0] == "xtra":
-					gameArray[currentWord].remove_at(gameArray[currentWord].size()-2)
-					iString = iString.left(-1)
-					# Checks if there are any more xtra characters inputted in currentWord
-					if not gameArray[currentWord][gameArray[currentWord].size()-2][0] == "xtra":
-						# If there aren't more xtra characters, word status is changed to null
-						gameArray[currentWord][gameArray[currentWord].size()-1] = null
-					char_deleted.emit(true)
-					return
-				else:
-					if gameArray[currentWord][iString.length()-1][1] == false:
-						_deleteLetter()
-						for i in range(0, gameArray[currentWord].size()-2):
-							if gameArray[currentWord][i][1] == false:
-								return
-						gameArray[currentWord][gameArray[currentWord].size()-1] = null
-						return
-					else:
-						_deleteLetter()
-						return
-				_deleteLetter()
-				return
-			else: # If the iString was empty and backspace was pressed, we move to the previous Word
-				_prevWord()
-				return
-		
+			_checkBackspace()
+			return
+
 		if event.keycode == KEY_SPACE: # If Space was pressed
 			_nextWord()
 			return
 		
 		# Keys that are not characters have a unicode of 0
-		# We do not want those keys to be deleted
+		# Stops invisible characters from being inputted
 		if event.unicode != 0:
 			# Checks if the iString is longer than the word Array
 			# True means there are xtra characters being inputted that need to be handled
@@ -89,6 +63,33 @@ func _checkInput():
 		gameArray[currentWord][iString.length()-1][1] = false
 		gameArray[currentWord][iString.length()-1][2] = iString.substr(iString.length()-1, 1) ## THIS SHOULDN'T BE HERE (look up) (it should be up in the _input() function (will change later)
 	char_inputted.emit(false)
+
+# Checks to see what the game should do if a backspace is pressed.
+func _checkBackspace():
+	if iString.length() != 0:
+		# Checks if the last "letter" in the currentWord array is an xtra input, If it is, it will be removed
+		if gameArray[currentWord][gameArray[currentWord].size()-2][0] == "xtra":
+			gameArray[currentWord].remove_at(gameArray[currentWord].size()-2)
+			iString = iString.left(-1)
+			# Checks if there are any more xtra characters inputted in currentWord
+			if not gameArray[currentWord][gameArray[currentWord].size()-2][0] == "xtra":
+				# If there aren't more xtra characters, word status is changed to null
+				gameArray[currentWord][gameArray[currentWord].size()-1] = null
+			char_deleted.emit(true)
+		else:
+			# Checks if the current word is set to false (incorrect)
+			if gameArray[currentWord][iString.length()-1][1] == false:
+				_deleteLetter()
+				# Iterates through the currentWord list checking for a false character
+				for i in range(0, gameArray[currentWord].size()-2):
+					if gameArray[currentWord][i][1] == false:
+						return
+				# If there are no false characters in the list, set the currentWord to null
+				gameArray[currentWord][gameArray[currentWord].size()-1] = null
+			else:
+				_deleteLetter()
+	else: # If the iString was empty and backspace was pressed, we move to the previous Word
+		_prevWord()
 
 # Deletes the current letter that the user has inputted
 func _deleteLetter():
